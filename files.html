@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upload & Download – DRKS - Télécharger</title>
+<style>
+:root{--bg:#1a0e08;--card:#2a1a10;--ink:#fbf3e6;--mut:#d0bfa5;--gold:#f0b35a;--line:rgba(251,243,230,.16)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,Segoe UI,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px clamp(16px,4vw,40px);border-bottom:1px solid var(--line)}
+.logo{font:700 22px Georgia,serif;color:var(--ink);text-decoration:none}a{color:var(--gold)}
+main{max-width:1100px;margin:0 auto;padding:28px clamp(16px,4vw,40px)}h1{font-family:Georgia,serif;margin:0 0 6px;font-size:clamp(28px,5vw,44px)}
+button,input{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink);padding:9px 16px;border-radius:999px;font-weight:600;text-decoration:none;display:inline-block}
+button.p,a.p{background:var(--gold);border-color:var(--gold);color:#2a1507}a.p{padding:9px 16px;border-radius:999px;font-weight:600;text-decoration:none;display:inline-block}
+button.d{color:#ff9b8a}:focus-visible{outline:3px solid var(--gold)}
+input[type=search]{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#150a05;color:var(--ink)}
+.drop{border:2px dashed var(--line);border-radius:22px;padding:38px 20px;text-align:center;margin:22px 0;color:var(--mut);background:var(--card)}.drop.over{border-color:var(--gold);background:#3a2514}
+.bar{height:8px;border-radius:8px;background:#150a05;overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;background:var(--gold);width:0}
+.up{padding:10px 0;border-top:1px solid var(--line);font-size:14px}.err{color:#ff9b8a}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-top:16px}
+.f{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.pv{aspect-ratio:4/3;background:#150a05;display:flex;align-items:center;justify-content:center;font:700 30px Georgia,serif;color:var(--gold)}.pv img,.pv video{width:100%;height:100%;object-fit:cover}
+.in{padding:12px 14px;display:flex;flex-direction:column;gap:8px}.nm{font-weight:600;word-break:break-all}.mt{color:var(--mut);font-size:13px}.row{display:flex;gap:8px;flex-wrap:wrap}
+</style></head><body>
+<header><a class="logo" href="/">DRKS - Télécharger</a><span class="mt">Anyone can upload. Anyone can download.</span></header>
+<main><h1>Upload and download files</h1><div class="mt" id="tot">Anyone can upload any photo, video or file here, and anyone with the link can download it.</div>
+<div class="drop" id="drop">Drag files here, or <button class="p" id="pick">Choose files</button><input type="file" id="file" multiple hidden></div>
+<div id="queue"></div>
+<input type="search" id="q" placeholder="Search by file name" aria-label="Search files" style="margin-top:20px"><div class="grid" id="grid"></div>
+<p class="mt" id="empty" hidden>No files yet. Be the first to upload one.</p><div style="text-align:center;margin:24px"><button id="more" hidden>Load more</button></div></main>
+<script>
+const $=s=>document.querySelector(s),esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const size=b=>b>=1e12?(b/1e12).toFixed(2)+' TB':b>=1e9?(b/1e9).toFixed(2)+' GB':b>=1e6?(b/1e6).toFixed(1)+' MB':Math.max(1,Math.round(b/1e3))+' KB';
+let tok={};try{tok=JSON.parse(localStorage.getItem('drks_tokens')||'{}')}catch{}
+const saveTok=()=>{try{localStorage.setItem('drks_tokens',JSON.stringify(tok))}catch{}};
+let next=null,term='';
+async function load(more){const u=`/api/public/files?q=${encodeURIComponent(term)}${more&&next?'&before='+next:''}`;
+ const d=await (await fetch(u)).json();const g=$('#grid');if(!more)g.innerHTML='';
+ g.insertAdjacentHTML('beforeend',d.files.map(f=>{const u='/api/public/files/'+f.pid,ext=(f.filename.split('.').pop()||'file').slice(0,4).toUpperCase();
+  const pv=!f.preview?`<div class="pv">${esc(ext)}</div>`:f.mime.startsWith('video')?`<div class="pv"><video src="${u}/view" controls preload="metadata" playsinline></video></div>`:`<div class="pv"><img src="${u}/view" alt="" loading="lazy"></div>`;
+  return `<div class="f" data-p="${f.pid}">${pv}<div class="in"><div class="nm">${esc(f.filename)}</div><div class="mt">${size(f.size)} · ${f.downloads} download${f.downloads==1?'':'s'}</div>
+  <div class="row"><a class="p" href="${u}/download">Download</a><button class="c">Copy link</button>${tok[f.pid]?'<button class="d x">Delete</button>':''}</div></div></div>`}).join(''));
+ next=d.next;$('#more').hidden=!next;$('#empty').hidden=!!$('#grid').children.length;
+ $('#tot').textContent=`${d.total.c} file${d.total.c==1?'':'s'} stored · ${size(d.total.n)} used. Anyone can upload and download here.`}
+$('#grid').onclick=async e=>{const c=e.target.closest('.f');if(!c)return;const p=c.dataset.p;
+ if(e.target.classList.contains('c')){const l=location.origin+'/api/public/files/'+p+'/download';try{await navigator.clipboard.writeText(l);e.target.textContent='Copied'}catch{prompt('Copy this link',l)}}
+ if(e.target.classList.contains('x')&&confirm('Delete this file for everyone?')){const r=await fetch('/api/public/files/'+p,{method:'DELETE',headers:{'x-delete-token':tok[p]}});if(r.ok){delete tok[p];saveTok();c.remove()}else alert((await r.json()).error)}};
+$('#more').onclick=()=>load(true);let t;$('#q').oninput=e=>{clearTimeout(t);t=setTimeout(()=>{term=e.target.value.trim();load()},300)};
+$('#pick').onclick=()=>$('#file').click();$('#file').onchange=e=>{enq([...e.target.files]);e.target.value=''};
+const dr=$('#drop');['dragover','dragenter'].forEach(n=>dr.addEventListener(n,e=>{e.preventDefault();dr.classList.add('over')}));['dragleave','drop'].forEach(n=>dr.addEventListener(n,e=>{e.preventDefault();dr.classList.remove('over')}));dr.addEventListener('drop',e=>enq([...e.dataTransfer.files]));
+const Q=[];let busy=false;function enq(fs){for(const f of fs){const el=document.createElement('div');el.className='up';$('#queue').append(el);Q.push({f,el})}run()}
+async function run(){if(busy)return;busy=true;while(Q.length)await send(Q.shift());busy=false;load()}
+function send(j){return new Promise(res=>{const{f,el}=j,x=new XMLHttpRequest(),t0=Date.now(),fd=new FormData();fd.append('files',f);
+ const set=(p,t,err,retry)=>{el.innerHTML=`<b>${esc(f.name)}</b><div class="bar"><i style="width:${p}%"></i></div><span class="${err?'err':''}">${t}</span> ${retry?'<button class="r">Retry</button>':''}`;if(retry)el.querySelector('.r').onclick=()=>{Q.push(j);run()}};
+ const fail=m=>{set(0,m,1,1);res()};x.open('POST','/api/public/upload');x.responseType='json';
+ x.upload.onprogress=e=>{if(!e.lengthComputable)return;const sp=e.loaded/((Date.now()-t0)/1000||1);set(e.loaded/e.total*100,`${size(e.loaded)} / ${size(e.total)} · ${size(sp)}/s · ${Math.ceil((e.total-e.loaded)/sp)} sec left`)};
+ x.onload=()=>{const d=x.response||{};if(x.status<300&&d.files){d.files.forEach(r=>tok[r.pid]=r.token);saveTok();set(100,'Uploaded');res()}else fail(d.error||'Upload failed. Please try again.')};
+ x.onerror=()=>fail('Upload failed. Please try again.');set(0,'Starting…');x.send(fd)})}
+load();
+</script></body></html>

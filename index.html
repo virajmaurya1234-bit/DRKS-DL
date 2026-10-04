@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DRKS - Télécharger – Store, Share & Access Your Memories Anywhere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#fbf3e6;--mut:#d9c7ad;--gold:#f0b35a;--glass:rgba(24,13,8,.52);--line:rgba(251,243,230,.2);--shade:0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:#1a0e08;color:var(--ink);font:400 17px/1.6 Figtree,system-ui,sans-serif}
+#bg{position:fixed;inset:0;z-index:-2;background:url(/bg.jpg) 50% 40%/cover no-repeat;transform-origin:50% 48%;will-change:transform}
+#veil{position:fixed;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(20,10,5,.78),rgba(20,10,5,.15) 70%),rgba(14,7,3,var(--shade))}
+nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:18px clamp(20px,5vw,56px)}
+.logo{font:700 22px Fraunces,Georgia,serif;color:var(--ink);text-decoration:none}
+.btn{display:inline-block;padding:13px 26px;border-radius:999px;font-weight:600;text-decoration:none;color:var(--ink);border:1px solid var(--line);backdrop-filter:blur(8px);transition:transform .2s,background .2s}
+.btn:hover{transform:translateY(-2px)}.btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.btn.p{background:var(--gold);color:#2a1507;border-color:var(--gold)}
+section{min-height:100vh;padding:120px clamp(20px,6vw,80px);display:flex;flex-direction:column;justify-content:center}
+h1,h2{font-family:Fraunces,Georgia,serif;line-height:1.04;margin:0;letter-spacing:-.02em}
+h1{font-size:clamp(42px,8vw,104px);max-width:11ch;font-weight:700}
+h2{font-size:clamp(32px,5vw,62px);max-width:16ch}
+p.sub{font-size:clamp(18px,2vw,22px);color:var(--mut);max-width:34ch;margin:24px 0 36px}
+.hero{justify-content:flex-end;padding-bottom:12vh}
+.hero h1 span{display:inline-block;opacity:0;transform:translateY(60px) rotate(2deg);animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.hero p,.hero .row{opacity:0;animation:rise .9s .7s forwards}.hero .row{animation-delay:.9s;display:flex;gap:14px;flex-wrap:wrap}
+.cue{position:absolute;right:clamp(20px,5vw,56px);bottom:6vh;color:var(--mut);font-size:14px;writing-mode:vertical-rl}
+.cue::after{content:"";display:block;width:1px;height:60px;background:var(--gold);margin:10px auto 0;animation:drip 1.8s infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.panel{background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:28px;padding:clamp(24px,4vw,56px)}
+.feat{margin-left:auto;max-width:760px}
+.feat ul{list-style:none;margin:32px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+.feat li{padding:18px 0;border-top:1px solid var(--line);transform:translateX(70px);opacity:0;transition:transform .8s cubic-bezier(.2,.8,.2,1),opacity .8s;transition-delay:calc(var(--i)*70ms)}
+.feat.in li{transform:none;opacity:1}
+.feat b{display:block;font:600 19px Fraunces,Georgia,serif;color:var(--gold)}.feat span{color:var(--mut);font-size:15px}
+.how{padding:0;display:block;min-height:0}
+.track{height:340vh;position:relative}
+.stick{position:sticky;top:0;height:100vh;display:flex;align-items:center;padding:0 clamp(20px,6vw,80px)}
+.how .panel{width:min(620px,100%);position:relative;overflow:hidden;min-height:340px}
+.step{position:absolute;inset:clamp(24px,4vw,56px);opacity:0;transform:translateY(40px);transition:.6s cubic-bezier(.2,.8,.2,1)}
+.step.on{opacity:1;transform:none}.step.past{transform:translateY(-40px)}
+.step h3{font:700 clamp(28px,4vw,46px)/1.1 Fraunces,Georgia,serif;margin:0 0 14px}.step p{color:var(--mut);margin:0;max-width:34ch}
+.dots{position:absolute;left:clamp(24px,4vw,56px);bottom:26px;display:flex;gap:8px}
+.dots i{width:34px;height:4px;border-radius:4px;background:var(--line);transition:background .4s}.dots i.on{background:var(--gold)}
+.how h2{position:absolute;top:14vh;left:clamp(20px,6vw,80px)}
+.cta{align-items:center;text-align:center}.cta h2{max-width:14ch;margin:0 auto}.cta p.sub{margin:22px auto 34px}
+footer{padding:28px;text-align:center;color:var(--mut);font-size:14px;background:rgba(14,7,3,.8)}
+@media(max-width:700px){.feat ul{grid-template-columns:1fr}.cue{display:none}.how h2{top:11vh}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.hero h1 span,.hero p,.hero .row,.feat li{opacity:1;transform:none}html{scroll-behavior:auto}}
+</style></head><body>
+<div id="bg" role="img" aria-label="Young man leaning in a carved wooden doorway set in a brick wall"></div><div id="veil"></div>
+<nav><a class="logo" href="#top">DRKS - Télécharger</a><span style="display:flex;gap:10px"><a class="btn p" href="/files.html">Upload Files</a></span></nav>
+
+<section class="hero" id="top">
+<h1 aria-label="Store, Share & Access Your Memories Anywhere"><span style="animation-delay:.1s">Store,</span> <span style="animation-delay:.2s">Share</span> <span style="animation-delay:.3s">&amp;</span> <span style="animation-delay:.4s">Access</span> <span style="animation-delay:.5s">Your</span> <span style="animation-delay:.6s">Memories</span> <span style="animation-delay:.7s">Anywhere</span></h1>
+<p class="sub">Upload photos and videos, organize them into albums, and share them with anyone.</p>
+<div class="row"><a class="btn p" href="/files.html">Get Started</a><a class="btn" href="#how">Explore Demo</a></div>
+<div class="cue">Scroll to step inside</div>
+</section>
+
+<section id="features"><div class="panel feat" id="feat">
+<h2>Everything your memories need</h2>
+<ul>
+<li style="--i:0"><b>Photo Storage</b><span>JPG, PNG, WEBP, GIF and HEIC at full quality.</span></li>
+<li style="--i:1"><b>Video Storage</b><span>MP4, MOV, WEBM and more, with thumbnails.</span></li>
+<li style="--i:2"><b>Albums</b><span>Group moments by trip, event or year.</span></li>
+<li style="--i:3"><b>Easy Sharing</b><span>One link, with optional password and expiry.</span></li>
+<li style="--i:4"><b>Fast Downloads</b><span>Single files or a whole album as ZIP.</span></li>
+<li style="--i:5"><b>Secure Storage</b><span>Private by default, with temporary signed links.</span></li>
+<li style="--i:6"><b>Large File Uploads</b><span>Resumable uploads that survive a bad connection.</span></li>
+<li style="--i:7"><b>Cloud Access</b><span>Phone, laptop or tablet, always in sync.</span></li>
+</ul></div></section>
+
+<section class="how" id="how"><div class="track" id="track"><div class="stick">
+<h2>From first upload to shared in four steps</h2>
+<div class="panel">
+<div class="step on"><h3>1. Create an album</h3><p>Name it, add a description and choose who can see it.</p></div>
+<div class="step"><h3>2. Upload photos and videos</h3><p>Drag files in. Large videos upload in parts and pick up where they stopped.</p></div>
+<div class="step"><h3>3. Share the album</h3><p>Copy a private link, set an expiry, and decide whether people can download.</p></div>
+<div class="step"><h3>4. View or download media</h3><p>Browse in the gallery, play videos in the browser, or save everything as a ZIP.</p></div>
+<div class="dots"><i class="on"></i><i></i><i></i><i></i></div>
+</div></div></div></section>
+
+<section class="cta" id="start">
+<h2>Open the door to your library</h2>
+<p class="sub">Create a free account and start your first album today.</p>
+<div class="row"><a class="btn p" href="/files.html">Get Started</a></div>
+</section>
+<footer>© 2026 DRKS - Télécharger. Your memories, safely stored.</footer>
+
+<script>
+(()=>{const bg=document.getElementById('bg'),root=document.documentElement.style,
+steps=[...document.querySelectorAll('.step')],dots=[...document.querySelectorAll('.dots i')],
+tr=document.getElementById('track'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function tick(){const max=document.documentElement.scrollHeight-innerHeight,p=Math.min(1,scrollY/max);
+if(!reduce){bg.style.transform=`scale(${1+p*.75}) translateY(${-p*3}%)`}
+root.setProperty('--shade',(.05+p*.55).toFixed(3));
+const r=tr.getBoundingClientRect(),q=Math.min(.999,Math.max(0,-r.top/(r.height-innerHeight))),k=Math.floor(q*steps.length);
+steps.forEach((s,i)=>{s.classList.toggle('on',i===k);s.classList.toggle('past',i<k)});dots.forEach((d,i)=>d.classList.toggle('on',i<=k))}
+addEventListener('scroll',()=>requestAnimationFrame(tick),{passive:true});addEventListener('resize',tick);tick();
+const f=document.getElementById('feat');new IntersectionObserver(e=>e.forEach(x=>x.isIntersecting&&f.classList.add('in')),{threshold:.25}).observe(f)})();
+</script></body></html>
